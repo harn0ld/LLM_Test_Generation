@@ -30,23 +30,43 @@ class DocReader:
 
     def analyze_text(self, text):
         headings = []
+        sections = {}
 
-        # Markdown-style headers
-        headings += re.findall(r'^\s{0,3}#{1,6}\s+(.*)', text, re.MULTILINE)
+        # Markdown-style headers (e.g., ### Header)
+        md_pattern = re.compile(r'^\s{0,3}(#{1,6})\s+(.*)', re.MULTILINE)
+        matches = list(md_pattern.finditer(text))
 
-        # reStructuredText headers (e.g., === underlines)
+        for i, match in enumerate(matches):
+            level, title = match.groups()
+            headings.append(title.strip())
+            start = match.end()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            section_content = text[start:end].strip()
+            sections[title.strip()] = section_content
+
+        # RST-style headers (e.g., underlined ===)
         rst_lines = text.splitlines()
         for i in range(1, len(rst_lines)):
             if re.match(r'^[=\-`~:\^\'"]{3,}$', rst_lines[i].strip()):
-                headings.append(rst_lines[i - 1].strip())
+                title = rst_lines[i - 1].strip()
+                headings.append(title)
+                start = text.find(title)
+                next_title = None
+                for j in range(i + 1, len(rst_lines)):
+                    if re.match(r'^[=\-`~:\^\'"]{3,}$', rst_lines[j].strip()):
+                        next_title = rst_lines[j - 1].strip()
+                        break
+                end = text.find(next_title) if next_title else len(text)
+                section_content = text[start:end].strip()
+                sections[title] = section_content
 
-        # Code blocks (Markdown-style or RST-style)
+        # Code examples
         code_blocks = re.findall(r'```[\s\S]*?```', text, re.MULTILINE)
         code_blocks += re.findall(r'::\n\n(?: {4}|\t).+', text, re.MULTILINE)
 
         return {
             "headings": headings,
             "examples": code_blocks,
+            "sections": sections,
             "raw": text[:1000]
         }
-

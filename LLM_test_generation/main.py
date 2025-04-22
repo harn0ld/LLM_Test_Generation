@@ -27,12 +27,12 @@ def analyze_github_repo(repo_url):
     doc_reader = DocReader(repo_path)
     docs = doc_reader.read_docs()
 
-    # print("\n📚 --- Wyniki analizy dokumentacji ---\n")
-    # for doc_file, doc_data in docs.items():
-    #     print(f"Dokument: {doc_file}")
-    #     print("Nagłówki:", doc_data.get("headings", []))
-    #     print("Liczba przykładów:", len(doc_data.get("examples", [])))
-    #     print("-" * 50)
+    print("\n📚 --- Wyniki analizy dokumentacji ---\n")
+    for doc_file, doc_data in docs.items():
+        print(f"Dokument: {doc_file}")
+        print("Nagłówki:", doc_data.get("headings", []))
+        print("Liczba przykładów:", len(doc_data.get("examples", [])))
+        print("-" * 50)
 
     prompt_generator = PromptGenerator(analyzer.extract_function_code)
     prompts = prompt_generator.generate_batch_prompts(code_results, docs)
