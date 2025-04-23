@@ -18,6 +18,7 @@ class CodeAnalyzer:
         except Exception as e:
             print(f"AST error while extracting {function_name}: {e}")
             return None
+
     def analyze(self):
         for subdir, _, files in os.walk(self.root_dir):
             for file in files:

@@ -2,6 +2,7 @@ import os
 import re
 import spacy
 
+
 class DocReader:
     def __init__(self, root_dir):
         self.root_dir = root_dir
@@ -25,7 +26,7 @@ class DocReader:
                     try:
                         self.docs_data[filepath] = self.analyze_text(content)
                     except Exception as e:
-                        print(f"Błąd w {filepath}: {e}")
+                        print(f"Error in {filepath}: {e}")
         return self.docs_data
 
     def analyze_text(self, text):
