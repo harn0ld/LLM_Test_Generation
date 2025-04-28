@@ -6,6 +6,7 @@ import shutil
 import os
 import stat
 import argparse
+from ollama_client import OllamaClient
 
 
 def handle_remove_readonly(func, path, _):
@@ -36,10 +37,28 @@ def analyze_github_repo(repo_url, test_type="unit"):
     print("\n --- Generated test prompts ---\n")
     for p in prompts:
         print(f"File: {p['file']} - Function: {p['function']}")
-        print(p['prompt'])
+        print(f"Prompt:\n{p['prompt']}")
         print("=" * 60)
+        send_prompt_to_ollama(p["prompt"])
 
     shutil.rmtree(repo_path, onerror=handle_remove_readonly)
+
+
+def print_prompt_and_response(prompt_text, model_response):
+    print(f"Prompt length: {len(prompt_text)}")
+    print("=== Model Response ===")
+    if model_response:
+        print(model_response)
+    else:
+        print("No response generated.")
+    print("=" * 60)
+
+
+def send_prompt_to_ollama(prompt_text):
+    """Send the prompt to Ollama model and display the response."""
+    client = OllamaClient(model_name="codellama:latest")
+    result = client.generate(prompt_text)
+    print_prompt_and_response(prompt_text, result)
 
 
 def main():
@@ -49,8 +68,8 @@ def main():
                         help="Choose type of tests to generate")
     args = parser.parse_args()
 
-    print(f"\n Cloning and analyzing repository: {args.repo}")
-    print(f" Test type selected: {args.test}")
+    print(f"\nCloning and analyzing repository: {args.repo}")
+    print(f"Test type selected: {args.test}")
     analyze_github_repo(args.repo, args.test)
 
 

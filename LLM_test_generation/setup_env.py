@@ -11,7 +11,7 @@ def download_spacy_model():
     subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
 
 
-def main():
+def setup_environment():
     if not os.path.exists("requirements.txt"):
         print("Error. Cannot find file requirements.txt")
         return
@@ -22,4 +22,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    setup_environment()

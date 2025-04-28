@@ -1,2 +1,4 @@
 spacy
 gitpython
+openai
+requests
