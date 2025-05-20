@@ -2,3 +2,6 @@ spacy
 gitpython
 openai
 requests
+hypothesis
+pytest
+coverage

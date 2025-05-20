@@ -12,7 +12,8 @@ class OllamaClient:
             "model": self.model_name,
             "prompt": prompt,
             "temperature": temperature,
-            "stream": False
+            "stream": False,
+            "keep_alive": "1m"
         }
         if max_tokens:
             payload["num_predict"] = max_tokens

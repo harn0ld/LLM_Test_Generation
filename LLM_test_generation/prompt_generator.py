@@ -31,7 +31,7 @@ class PromptGenerator:
         prompt = f"""
 # File: {file_path}
 # Function: {function_name}
-{import_info}
+
 {code_context}
 {doc_info}
 """
